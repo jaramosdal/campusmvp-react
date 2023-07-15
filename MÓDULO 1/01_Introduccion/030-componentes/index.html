@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ciclo de vida de un componente React</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style type="text/css">
+      body { 
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      main { 
+        padding: 3em;
+        max-width: 42em;
+        margin: 0 auto;
+      }
+      .caja { 
+        text-align: center;
+        border: 1px solid silver;
+        padding: 1em;
+        transition: background .2s ease-in-out; 
+      }
+      button {
+        padding: 1em;
+        margin: 1em 1em 1em 0; 
+      }
+    </style>
+  </head>
+  <body>
+    <main id="root"></main>
+    
+    <script type="text/babel">
+      const Botones = () => {
+        const [texto, setTexto] = React.useState("Soy un componente")
+        const [color, setColor] = React.useState("lightblue")
+
+        // Efectos tras el primer renderizado
+        React.useEffect(() => { console.log("Se ha montado el componente")}, [])
+
+        // Efectos tras cada renderizado
+        React.useEffect(() => { console.log("Componente actualizado") })
+
+        // Efectos tras una modificación del estado
+        React.useEffect(() => { console.log("Se ha modificado el texto")}, [texto])
+        React.useEffect(() => { console.log("Se ha modificado el color")}, [color])
+
+        // Efectos tras el desmontaje
+        React.useEffect(() => () => { console.log("Componente desmontado")}, [])
+
+        return <div className="caja" style={{background: color}}>
+          <p>{texto}</p>
+          <p>
+            <button onClick={() => setTexto(texto + "!")}>Añadir una exclamación!</button>
+            <button onClick={() => setColor(color == "lightblue" ? "lightpink" : "lightblue")}>Cambiar de color</button>
+          </p>
+        </div>
+      }
+
+      // Componente principal que renderiza la aplicación
+      const App = () => {
+        const [mostrar, setMostrar] = React.useState(false)
+        if (mostrar) {
+          return <div>
+              <button onClick={() => setMostrar(false)}>Desmontar componente</button>
+              <Botones />
+            </div>
+        } else {
+          return <button onClick={() => setMostrar(true)}>Montar componente</button>
+        }
+      }
+      const container = document.getElementById('root');
+      const root = ReactDOM.createRoot(container);
+      root.render(<React.StrictMode><App /></React.StrictMode>);
+    </script>
+  </body>
+</html>

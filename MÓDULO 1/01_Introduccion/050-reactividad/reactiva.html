@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<title>Aplicación reactiva de forma manual</title>
+<header>
+  <h1>Gestor de tareas</h1>
+  <p>Este gestor de tareas consiste en una página HTML reactiva que funciona totalmente en el lado del cliente, sin
+    comunicarse con un servidor.</p>
+</header>
+<main>
+  <h2>Tareas disponibles</h2>
+  <ul id="lista"></ul>
+  <form id="form">
+    <input type="text" name="titulo" placeholder="Nueva tarea" autofocus autocomplete="off">
+    <input type="submit" value="Añadir">
+  </form>
+</main>
+<script>
+  var listaTareas = []
+  var app = document.querySelector("#lista")
+  const update = () => {
+    app.innerHTML = listaTareas.map(({ titulo }) => `<li>${titulo}</li>`).join("")
+  }
+
+  var form = document.querySelector("#form")
+  form.addEventListener("submit", (ev) => {
+    ev.preventDefault()
+    listaTareas.push({ titulo: document.querySelector("[name='titulo']").value })
+    update()
+  })
+
+  update()
+</script>
