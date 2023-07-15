@@ -16,15 +16,32 @@
 <script>
   var listaTareas = []
   var app = document.querySelector("#lista")
-  const update = () => {
+  const input = document.querySelector("[name='titulo']");
+
+  const update = (typing) => {
     app.innerHTML = listaTareas.map(({ titulo }) => `<li>${titulo}</li>`).join("")
+
+    if (typing) {
+      const li = document.createElement('li')
+      li.innerHTML = typing;
+      app.appendChild(li);
+    } else {
+      input.value = "";
+    }
+
   }
+
 
   var form = document.querySelector("#form")
   form.addEventListener("submit", (ev) => {
     ev.preventDefault()
-    listaTareas.push({ titulo: document.querySelector("[name='titulo']").value })
+    listaTareas.push({ titulo: input.value })
     update()
+  })
+
+  input.addEventListener('keyup', () => {
+    console.log(input.value)
+    update(input.value)
   })
 
   update()

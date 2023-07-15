@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Motor de búsqueda en Wikipedia</h1>
+
+    <h2>Indique una palabra clave de la cual desee realizar una búsqueda dentro de la Wikipedia</h2>
+
+    <form id="form">
+        <input type="text" name="termino">
+        <input type="submit" value="Buscar">
+    </form>
+
+    <script>
+        const buscar = async (termino) => {
+            const resultadoBusqueda = await fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${termino}&rvslots=*&rvprop=content&format=json`);
+            const resultJson = await resultadoBusqueda.json();
+            console.log(resultJson)
+        }
+
+        document.querySelector('#form').addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+
+            const termino = document.querySelector('[name="termino"]').value;
+            console.log(termino)
+            await buscar(termino);
+        })
+
+
+    </script>
+</body>
+
+</html>
