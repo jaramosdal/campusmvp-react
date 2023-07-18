@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Ejemplo: Componentes con React.createElement</title>
+  <script src="https://unpkg.com/react/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style type="text/css">
+    body {
+      font-size: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, h3, h4, h5, h6 { 
+      margin: 0; 
+      padding: 1rem 0; 
+    }
+    main {
+      background-color: #fafafa;
+      max-width: 30em;
+      margin: 0 auto;
+      padding: 0 1rem;
+      min-height: 100vh;
+    }
+    .componente {
+      box-sizing: border-box;
+      border: 2px solid;
+      padding: 1rem;
+    }
+    .form {
+      border-color: #6060f0;
+    }
+    .cabe {
+      border-color: #f06060;
+    }
+    .despl {
+      border-color: #60f0a0;
+    }
+    .app {
+      border-color: #c0c020;
+    }
+  </style>
+</head>
+<body>
+  <main id="root"></main>
+  <script type="text/babel">
+
+    const FormularioBusqueda = () => {
+      return React.createElement(
+        "form",
+        { action: "/search", method: "GET", className: "componente form" },
+        React.createElement(
+          "input",
+          { type: "search", placeholder: "Términos de búsqueda" }
+        ),
+        React.createElement(
+          "button",
+          { type: "submit" },
+          "Buscar"
+        )
+      )
+    }
+    const Cabecera = () => {
+      return React.createElement(
+        "div",
+        { className: "componente cabe" },
+        React.createElement("h1", null, "Mi primera app React"),
+        React.createElement(FormularioBusqueda)
+      )
+    }
+    const Desplegable = ({ titulo, contenido }) => (
+      React.createElement(
+        "details", { className: "componente despl" },
+        React.createElement('summary', null, titulo),
+        React.createElement('p', null, contenido)
+      )
+    )
+
+    const App = () => (
+      React.createElement(
+        "div", { className: "componente app" },
+        React.createElement(Cabecera),
+        React.createElement("h3", null, "Directorio de productos"),
+        React.createElement(
+          Desplegable,
+          { titulo: "Más detalles", contenido: "Contenido detallando el producto" }
+        )
+      )
+    )
+
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>
