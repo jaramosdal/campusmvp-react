@@ -1,16 +1,27 @@
 import "./App.css";
-import Tarea from "./Tarea";
+import ListaTareas from "./ListaTareas";
 
 function App() {
+  const tareas = [
+    {
+      titulo: "Aprender componentes de React",
+      completada: false,
+    },
+    {
+      titulo: "Completar las prácticas del módulo 1",
+      completada: true,
+    },
+    {
+      titulo: "Realizar la autoevaluación",
+      completada: false,
+    },
+  ];
+
   return (
     <div className="App">
       <h1>Kanpus</h1>
       <p>Tareas pendientes:</p>
-      <ul>
-        <Tarea titulo="Aprender componentes de React" />
-        <Tarea titulo="Completar las prácticas del módulo 1" />
-        <Tarea titulo="Realizar la autoevaluación" />
-      </ul>
+      <ListaTareas tareas={tareas} />
     </div>
   );
 }
