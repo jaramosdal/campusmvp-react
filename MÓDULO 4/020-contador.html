@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Ejemplo: Interruptor</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style type="text/css">
+        body {
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        div { 
+            background-color: #9dd8df; 
+            border: 1px solid #5eafb8;
+            border-radius: 2rem;
+            padding: 0 0 0 .5rem;
+            margin: 1rem;
+            width: max-content;
+            transition: all .15s ease-in-out;
+        }
+        div.off {
+            background-color: #41585b;
+            color: white;
+        }
+        span {
+            margin-right: 1rem;
+            display: inline-block;
+        }
+        button {
+            border-radius: 2rem;
+            min-width: 2rem;
+            font-size: inherit;
+            padding: .2rem .5rem;
+            border-style: none;
+            margin-right: .5rem;
+        }
+    </style>
+</head>
+<body>
+    <main id="root"></main>
+    <script type="text/babel">
+        const Interruptor = ({ estadoInicial = true }) => {
+            const [contador, setContador] = React.useState(0)
+            const limite = 5
+            
+            const bajarNivel = () => {
+                if (contador > 0) {
+                    setContador(contador - 1)
+                }
+            }
+
+            const subirNivel = () => {
+                if (contador < limite) {
+                    setContador(contador + 1)
+                }
+            }
+            
+            return <div className={contador > 0 ? "on" : "off"}>
+                <button onClick={bajarNivel}>&ndash;</button>
+                <button onClick={subirNivel}>+</button>
+                <span>Estado actual: <strong>{contador > 0 ? "ON " : "OFF"}</strong></span>
+                {"💡".repeat(contador)}
+            </div>
+        }
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<Interruptor />);
+    </script>
+</body>
+</html>

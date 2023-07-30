@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Ejemplo: Interruptor</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style type="text/css">
+        body {
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        div { 
+            background-color: #9dd8df; 
+            border: 1px solid #5eafb8;
+            border-radius: 2rem;
+            padding: 0 0 0 .5rem;
+            margin: 1rem;
+            width: max-content;
+            transition: all .15s ease-in-out;
+        }
+        div.off {
+            background-color: #41585b;
+            color: white;
+        }
+        span {
+            margin: 0 1rem;
+            display: inline-block;
+        }
+        button {
+            border-radius: 2rem;
+            font-size: inherit;
+            padding: .2rem .5rem;
+        }
+    </style>
+</head>
+<body>
+    <main id="root"></main>
+    <script type="text/babel">
+        const useToggle = (estadoInicial = false) => {
+            const [valor, setValor] = React.useState(estadoInicial)
+            const toggle = () => setValor(!valor)
+            return [valor, toggle]
+        }
+        const Interruptor = ({ estadoInicial = true }) => {
+            const [encendido, cambiarEstado] = useToggle(estadoInicial)
+            
+            return <div className={encendido ? "on" : "off"}>
+                <button onClick={cambiarEstado}>{encendido ? "Apagar" : "Encender"}</button>
+                <span>Estado actual: <strong>{encendido ? "ON" : "OFF"}</strong></span>
+            </div>
+        }
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<Interruptor />);
+    </script>
+</body>
+</html>
