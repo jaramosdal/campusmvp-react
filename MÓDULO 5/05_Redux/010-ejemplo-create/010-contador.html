@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Ejemplo: Contador con Reducer</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style type="text/css">
+        body {
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        div { 
+            background-color: #9dd8df; 
+            border: 1px solid #5eafb8;
+            border-radius: 2rem;
+            padding: 0 0 0 .5rem;
+            margin: 1rem;
+            width: max-content;
+            transition: all .15s ease-in-out;
+        }
+        span {
+            margin-right: 1rem;
+            display: inline-block;
+        }
+        button {
+            border-radius: 2rem;
+            min-width: 2rem;
+            font-size: inherit;
+            padding: .2rem .5rem;
+            border-style: none;
+            margin-right: .5rem;
+        }
+    </style>
+</head>
+<body>
+    <main id="root"></main>
+    <script type="text/babel">
+        const initialState = 0
+        const INCREMENTAR = "INCREMENTAR"
+        const DECREMENTAR = "DECREMENTAR"
+        const reducer = (state, action) => {
+            if (action == INCREMENTAR) {
+                return state + 1
+            } else if (action == DECREMENTAR) {
+                return state > 0 ? state - 1 : state
+            }
+            return state
+        }
+
+        const Interruptor = ({ estadoInicial = true }) => {
+            const [contador, dispatch] = React.useReducer(reducer, initialState)
+            
+            return <div>
+                <button onClick={() => dispatch(DECREMENTAR)}>&ndash;</button>
+                <button onClick={() => dispatch(INCREMENTAR)}>+</button>
+                <span>Estado actual: <strong>{contador}</strong></span>
+            </div>
+        }
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<Interruptor />);
+    </script>
+</body>
+</html>

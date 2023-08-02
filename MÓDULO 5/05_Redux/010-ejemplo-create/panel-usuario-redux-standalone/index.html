@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Panel de usuario con Redux</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+    <script src="https://unpkg.com/react-redux@latest/dist/react-redux.min.js"></script>
+    <style type="text/css">
+      #root {
+        min-width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .panel {
+        width: min(100vw, 30rem);
+        min-height: min(100vh, 20rem);
+        background-color: #e0f1f0;
+        padding: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 1rem;
+        text-align: center;
+      }
+      input, button {
+        padding: .5rem;
+        border-style: solid;
+        border-radius: 1rem;
+        margin: 0 .2rem 1rem .2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="root"></main>
+    
+    <script type="text/babel">
+      const initialState = {
+        usuarioActual: null,
+        usuarios: {}
+      }
+
+      function sesionReducer(state = initialState, action) {
+        // Decidir el próximo estado en función del tipo de acción
+        switch (action.type) {
+          case "panel/sesionIniciada":
+            const nombre = action.payload.usuario
+            // Incrementar el número de veces que este usuario ha iniciado
+            const nuevasVeces = state.usuarios[nombre]?.veces ?
+              state.usuarios[nombre].veces + 1 : 1
+            // Producir un nuevo estado, copia del anterior, con los valores actuales
+            return { 
+              ...state, 
+              usuarioActual: nombre,
+              usuarios: {
+                ...state.usuarios,
+                [nombre]: {
+                  ...state.usuarios[nombre],
+                  veces: nuevasVeces
+                }
+              }
+            }
+          case "panel/sesionCerrada":
+            // Restablecer el usuario actual
+            return { ...state, usuarioActual: null }
+          default:
+            // Si la acción es de un tipo que este reducer no maneja,
+            // devolver el estado tal cual
+            return state
+        }
+      }
+
+      function datosReducer(state = initialState, action) {
+        if (action.type === "datos/bioCambiada") {
+          // desestructuramos la acción para obtener únicamente los valores que necesitamos
+          const { payload: { bio, usuario } } = action
+          // no podemos mutar el estado:
+          // state.usuarios[action.payload.usuario].bio = action.payload.bio
+          return {
+            ...state,
+            usuarios: {
+              ...state.usuarios,
+              [usuario]: {
+                ...state.usuarios[usuario],
+                bio
+              }
+            }
+          }
+        }
+        return state
+      }
+      const rootReducer = (state = initialState, action) => datosReducer(sesionReducer(state, action), action)
+      // Creación del almacén
+      const store = Redux.createStore(rootReducer)
+
+      // Componente para el formulario de inicio de sesión
+      const FormLogin = ({ onInicioSesion }) => {
+        const [usuarioIniciar, setUsuarioIniciar] = React.useState("")
+        return (
+          <form>
+            <input type="text" value={usuarioIniciar} 
+              onChange={e => setUsuarioIniciar(e.target.value)} placeholder="alice" /><br/>
+            {usuarioIniciar.length>0 && <button onClick={() => onInicioSesion(usuarioIniciar)}>
+              Iniciar sesión como {usuarioIniciar}</button>}
+          </form>
+        )
+      }
+
+      // Componente que muestra los datos del usuario actual
+      const DatosUsuario = ({ nombre, onCierreSesion }) => {
+        const veces = ReactRedux.useSelector(state => state.usuarios[nombre]?.veces)
+        const initialBio = ReactRedux.useSelector(state => state.usuarios[nombre]?.bio) ?? ""
+        const dispatch = ReactRedux.useDispatch()
+        const [bio, setBio] = React.useState(initialBio)
+        const guardarBio = () => {
+          dispatch({
+            type: "datos/bioCambiada",
+            payload: {
+              usuario: nombre,
+              bio
+            }
+          })
+        }
+        return (
+          <div>
+            <p>Has iniciado sesión {veces === 1 ? "1 vez" : `${veces} veces`}.</p>
+            <textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Biografía" />
+            <p><button onClick={guardarBio}>Guardar biografía</button>
+            <button onClick={onCierreSesion}>Cerrar sesión</button></p>
+          </div>
+        )
+      }
+
+      // Componente que mostrará el panel de usuario
+      const PanelUsuario = () => {
+        const nombre = ReactRedux.useSelector(state => state.usuarioActual)
+        const dispatch = ReactRedux.useDispatch()
+        const iniciarSesion = (usuario = "david") => {
+          return {type: "panel/sesionIniciada", payload: { usuario }}
+        }
+
+        return (
+          <div className="panel">
+            <h1>{nombre === null ? "Inicia sesión" : `¡Hola de nuevo, ${nombre}!`}</h1>
+            
+            {nombre === null
+            ? <FormLogin onInicioSesion={u => dispatch(iniciarSesion(u))} />
+            : <DatosUsuario nombre={nombre} onCierreSesion={() => dispatch({type: "panel/sesionCerrada"})} />}
+          </div>
+        )
+      }
+
+      // Componente principal que renderiza la aplicación con el proveedor de estado de Redux
+      const App = () => {
+        return (
+          <ReactRedux.Provider store={store}>
+            <PanelUsuario />
+          </ReactRedux.Provider>
+        )
+      }
+      const container = document.getElementById('root');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
