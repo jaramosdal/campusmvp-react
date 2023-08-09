@@ -10,14 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import Boton from "../utils/Boton";
 import { ContextoTema } from "../utils/temas";
 
-const Tarea = ({ id, titulo: initialTitulo, completada }) => {
+const Tarea = ({ id }) => {
+  const { titulo, completada } = useSelector((state) => state.tareas.lista[id]);
   const dispatch = useDispatch();
-  const [titulo, setTitulo] = useState(initialTitulo);
   const eliminarTarea = () => dispatch(eliminada(id));
   const alternarTarea = () => dispatch(alternada(id));
   const editarTarea = (event) => {
-    setTitulo(event.target.value);
-    dispatch(modificada({ id, titulo }));
+    dispatch(modificada({ id, titulo: event.target.value }));
   };
 
   return (
@@ -36,7 +35,6 @@ const Tarea = ({ id, titulo: initialTitulo, completada }) => {
         value={titulo}
         onChange={editarTarea}
         disabled={completada}
-        readOnly
       />
       <Boton onClick={eliminarTarea}>Eliminar</Boton>
     </li>
@@ -66,31 +64,27 @@ const FormularioNueva = () => {
   );
 };
 
-const ListaTareas = () => {
+const ListaTareas = ({ id: listaId }) => {
+  const { nombre, lista: tareas } = useSelector(
+    (state) => state.tablero[listaId]
+  );
   const tema = useContext(ContextoTema);
-  const dispatch = useDispatch();
-  const tareas = useSelector((state) => state.tareas.lista);
-
-  if (tareas.length == 0) {
-    return null;
-  }
 
   return (
-    <>
-      <Boton
-        onClick={() => {
-          dispatch(todasCompletadas());
-        }}
-      >
-        Marcar como completadas
-      </Boton>
-      <ul style={{ background: tema.fondo, color: tema.texto }}>
-        {Object.entries(tareas).map(([id, tarea]) => (
-          <Tarea {...tarea} key={id} id={id} />
-        ))}
-      </ul>
-      <FormularioNueva />
-    </>
+    <div
+      className="lista"
+      style={{ background: tema.fondo, color: tema.texto }}
+    >
+      <h2>{nombre}</h2>
+      {tareas.length > 0 && (
+        <ul>
+          {tareas.map((id) => (
+            <Tarea key={id} id={id} />
+          ))}
+        </ul>
+      )}
+      <FormularioNueva listaId={listaId} />
+    </div>
   );
 };
 

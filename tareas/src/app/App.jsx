@@ -3,8 +3,8 @@ import "./App.css";
 import FormularioSignup from "../features/cuenta/FormSignup";
 import { ContextoTema, temas } from "../features/utils/temas";
 import Boton from "../features/utils/Boton";
-import ListaTareas from "../features/tareas/ListaTareas";
 import { useSelector } from "react-redux";
+import Tablero from "../features/tablero/Tablero";
 
 const Cabecera = () => {
   const tareas = useSelector((state) => Object.values(state.tareas.lista));
@@ -37,7 +37,7 @@ const App = () => {
           <FormularioSignup />
         </details>
         <Cabecera />
-        <ListaTareas />
+        <Tablero />
         <p>
           {tema == "claro" ? (
             <Boton onClick={() => setTema("oscuro")}>Activar tema oscuro</Boton>
