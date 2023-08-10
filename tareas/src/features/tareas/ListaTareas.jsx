@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Boton from "../utils/Boton";
 import { ContextoTema } from "../utils/temas";
+import "./ListaTareas.css";
 
 const Tarea = ({ id }) => {
   const { titulo, completada } = useSelector((state) => state.tareas.lista[id]);
