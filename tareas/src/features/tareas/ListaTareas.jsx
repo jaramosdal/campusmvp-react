@@ -5,11 +5,13 @@ import {
   creada,
   modificada,
   todasCompletadas,
+  tareaDuplicada,
 } from "./tareasSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Boton from "../utils/Boton";
 import { ContextoTema } from "../utils/temas";
 import "./ListaTareas.css";
+import { tableroEliminado, tableroRenombrado } from "../tablero/tableroSlice";
 
 const Tarea = ({ id }) => {
   const { titulo, completada } = useSelector((state) => state.tareas.lista[id]);
@@ -19,6 +21,7 @@ const Tarea = ({ id }) => {
   const editarTarea = (event) => {
     dispatch(modificada({ id, titulo: event.target.value }));
   };
+  const duplicarTarea = () => dispatch(tareaDuplicada(id));
 
   return (
     <li className={completada ? "done" : "todo"}>
@@ -37,7 +40,8 @@ const Tarea = ({ id }) => {
         onChange={editarTarea}
         disabled={completada}
       />
-      <Boton onClick={eliminarTarea}>Eliminar</Boton>
+      <Boton onClick={duplicarTarea}>D</Boton>
+      <Boton onClick={eliminarTarea}>X</Boton>
     </li>
   );
 };
@@ -69,7 +73,14 @@ const ListaTareas = ({ id: listaId }) => {
   const { nombre, lista: tareas } = useSelector(
     (state) => state.tablero[listaId]
   );
+  const dispatch = useDispatch();
   const tema = useContext(ContextoTema);
+  const handleNameChange = (event) => {
+    dispatch(tableroRenombrado({ listaId, nombre: event.target.value }));
+  };
+  const handleElminar = () => {
+    dispatch(tableroEliminado(listaId));
+  };
 
   return (
     <div
@@ -77,6 +88,12 @@ const ListaTareas = ({ id: listaId }) => {
       style={{ background: tema.fondo, color: tema.texto }}
     >
       <h2>{nombre}</h2>
+      <h2>
+        <input type="text" value={nombre} onChange={handleNameChange} />
+        <Boton type="submit" onClick={handleElminar}>
+          X
+        </Boton>
+      </h2>
       {tareas.length > 0 && (
         <ul>
           {tareas.map((id) => (

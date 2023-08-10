@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit"
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 // El initialState puede ser el valor de estado inicial o bien una
 // función que genere el estado inicial al llamarla, por ejemplo,
@@ -7,18 +7,18 @@ const initialState = {
   lista: {
     1: {
       titulo: "Aprender componentes de React",
-      completada: false
+      completada: false,
     },
     2: {
       titulo: "Completar las prácticas del módulo 1",
-      completada: true
+      completada: true,
     },
     3: {
       titulo: "Realizar la autoevaluación",
-      completada: false
-    }
-  }
-}
+      completada: false,
+    },
+  },
+};
 
 // La herramienta createSlice nos facilita la creación de acciones
 // y el reducer principal de la slice simplemente indicando reducers
@@ -35,22 +35,23 @@ const tareasSlice = createSlice({
       // const {[action.payload]: _, ...lista} = state.lista
       // return { ...state, lista }
       // Versión "mutante":
-      delete state.lista[action.payload]
+      delete state.lista[action.payload];
     },
     // (acción de tipo "tareas/alternada")
     alternada(state, action) {
-      state.lista[action.payload].completada = !state.lista[action.payload].completada
+      state.lista[action.payload].completada =
+        !state.lista[action.payload].completada;
     },
     // (acción de tipo "tareas/modificada")
     modificada(state, action) {
-      state.lista[action.payload.id].titulo = action.payload.titulo
+      state.lista[action.payload.id].titulo = action.payload.titulo;
     },
     // Un reducer puede no tomar una acción como parámetro si el resultado
     // es siempre el mismo, en este caso, completar todas las tareas
     // (tipo "tareas/todasCompletadas")
     todasCompletadas(state) {
       for (let id in state.lista) {
-        state.lista[id].completada = true
+        state.lista[id].completada = true;
       }
     },
     // También podemos indicar el reducer y la función de preparación
@@ -58,27 +59,32 @@ const tareasSlice = createSlice({
     // los datos que necesitemos para el reducer.
     // (acción de tipo "tareas/creada")
     creada: {
-      prepare(titulo) {
-        return { payload: { id: nanoid(), titulo } }
+      prepare(titulo, listaId) {
+        return { payload: { id: nanoid(), titulo, listaId } };
       },
       reducer(state, action) {
         state.lista[action.payload.id] = {
           titulo: action.payload.titulo,
-          completada: false
-        }
-      }
-    }
-  }
-})
+          completada: false,
+        };
+      },
+    },
+  },
+});
 
 // En tareasSlice.actions tendremos las funciones creadoras de acciones
 // y en tareasSlice.reducer el reducer principal para esta slice
-export const { 
-  creada, 
-  eliminada,
-  alternada,
-  modificada,
-  todasCompletadas
-} = tareasSlice.actions
+export const { creada, eliminada, alternada, modificada, todasCompletadas } =
+  tareasSlice.actions;
 
-export default tareasSlice.reducer
+export const tareaDuplicada = (tareaId) => (dispatch, getState) => {
+  const titulo = getState().tareas.lista[tareaId].titulo;
+  const tablero = getState().tablero;
+  const listaId = Object.keys(tablero).find((k) =>
+    tablero[k].lista.includes(tareaId)
+  );
+
+  dispatch(creada(titulo, listaId));
+};
+
+export default tareasSlice.reducer;

@@ -31,6 +31,9 @@ const tableroSlice = createSlice({
         return { payload: { id: nanoid(), nombre } };
       },
     },
+    listaEliminada(state, action) {
+      delete state[action.payload];
+    },
     tareaQuitada(state, action) {
       state[action.payload.from_id].lista.splice(
         state[action.payload.from_id].lista.indexOf(action.payload.tarea_id),
@@ -46,12 +49,17 @@ const tableroSlice = createSlice({
         action.payload.tarea_id
       );
     },
+    tableroRenombrado(state, action) {
+      console.log(action);
+      state[action.payload.listaId].nombre = action.payload.nombre;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(creada, (state, action) => {
       state[action.payload.listaId].lista.push(action.payload.id);
     });
     builder.addCase(eliminada, (state, action) => {
+      console.log("eliminada", action);
       for (let t in state) {
         const index = state[t].lista.indexOf(action.payload);
         if (index > -1) {
@@ -62,6 +70,24 @@ const tableroSlice = createSlice({
   },
 });
 
-export const { listaCreada, tareaQuitada, tareaAgregada } =
-  tableroSlice.actions;
+export const {
+  listaCreada,
+  tareaQuitada,
+  tareaAgregada,
+  tableroRenombrado,
+  listaEliminada,
+} = tableroSlice.actions;
+
+export const tableroEliminado = (listaId) => (dispatch, getState) => {
+  const tablero = getState().tablero[listaId];
+  console.log(tablero.lista);
+
+  for (const tareaId of tablero.lista) {
+    console.log("Elimino tarea " + tareaId);
+    dispatch(eliminada(tareaId));
+  }
+
+  dispatch(listaEliminada(listaId));
+};
+
 export default tableroSlice.reducer;
