@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    @apply text-gray-900;
+  }
+
+  html, body {
+    @apply m-0 p-0 bg-zinc-50 dark:bg-zinc-900;
+  }
+  #root {
+    min-width: 100vw;
+    min-height: 100vh;
+    box-sizing: border-box;
+    @apply w-max;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      @apply text-gray-50;
+      color-scheme: light dark;
+    }
+  }
+}
+
+@layer components {
+  input:not(:focus) + .visible-on-input-focus:not(:focus):not(:active) {
+    @apply hidden;
+  }
+}

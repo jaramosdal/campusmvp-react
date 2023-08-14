@@ -1,0 +1,102 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  display: flex;
+  align-items: stretch;
+  min-width: 320px;
+  min-height: 100vh;
+}
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.2em .6em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.1s ease;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+#root {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+}
+form.new {
+  padding: 1rem;
+  box-shadow: 0 0 1rem -.5rem rgba(0,0,0,0.4);
+  border: 1px solid skyblue;
+  border-radius: 8px;
+  background-color: lightcyan;
+}
+form textarea {
+  height: 4rem;
+  resize: none;
+  padding: 1rem;
+}
+form button {
+  padding: 0.6em 1.2em;
+}
+.post {
+  border: 1px solid skyblue;
+  border-radius: 8px;
+  box-shadow: 0 0 1rem -.5rem rgba(0,0,0,0.4);
+  margin-top: 1rem;
+  display: grid;
+  grid: [fila1-start] "aut date" auto [fila1-end]
+        [fila2-start] "post post" auto [fila2-end]
+        [fila3-start] "opt opt" auto [fila3-end]
+        / 1fr 1fr;
+  overflow: hidden;
+}
+.post .aut, .post .text, .post .date, .post .opt {
+  padding: .5rem 1rem;
+}
+.post .aut {
+  grid-area: aut;
+  background-color: whitesmoke;
+  border-bottom: 1px solid silver;
+}
+.post .date {
+  grid-area: date;
+  background-color: whitesmoke;
+  border-bottom: 1px solid silver;
+  text-align: right;
+}
+.post .text {
+  grid-area: post;
+}
+.post .opt {
+  grid-area: opt;
+  background-color: whitesmoke;
+  border-top: 1px solid silver;
+}
+summary {
+  user-select: none;
+  margin: 0.2em 0;
+  padding: 0.2em .6em;
+}

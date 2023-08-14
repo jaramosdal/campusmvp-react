@@ -1,0 +1,56 @@
+{
+  "tareas": [
+    {
+      "id": 1,
+      "titulo": "Extraer estilo de lista en componente",
+      "lista": "doing"
+    },
+    {
+      "id": 2,
+      "titulo": "Comunicar app con backend simulado",
+      "lista": "todo"
+    },
+    {
+      "id": 3,
+      "titulo": "Desplegar aplicación",
+      "lista": "todo"
+    },
+    {
+      "id": 5,
+      "titulo": "Slice tablero con varias listas de tareas",
+      "lista": "todo"
+    },
+    {
+      "id": 6,
+      "titulo": "Componentes para mostrar tareas",
+      "lista": "doing"
+    },
+    {
+      "id": 7,
+      "titulo": "Acciones para añadir y eliminar tareas",
+      "lista": "doing"
+    },
+    {
+      "id": 8,
+      "titulo": "Componente Botón independiente",
+      "lista": "doing"
+    }
+  ],
+  "tablero": [
+    {
+      "id": "todo",
+      "nombre": "Pendiente",
+      "orden": 1
+    },
+    {
+      "id": "doing",
+      "nombre": "En proceso",
+      "orden": 2
+    },
+    {
+      "id": "done",
+      "nombre": "Completado",
+      "orden": 3
+    }
+  ]
+}
