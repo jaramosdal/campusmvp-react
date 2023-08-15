@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getBlog } from "./services";
+import { useFlag } from "./useFlag";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [blog, setBlog] = useState([]);
+  const [obsoleto, set, unset] = useFlag();
+  useEffect(() => {
+    getBlog().then(setBlog);
+    return unset;
+  }, [obsoleto]);
+
+  const [postContent, setPostContent] = useState("");
+  const addPost = (event) => {
+    event.preventDefault();
+    saveNewPost(postContent).then(set);
+    setNewPost("");
+  };
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <h1>Microblog personal</h1>
+      <form onSubmit={handleSubmit} className="new">
+        <textarea
+          value={postContent}
+          placeholder="Nuevo post"
+          onChange={(event) => setPostContent(event.target.value)}
+        />
+        <button type="submit">Publicar</button>
+      </form>
+      {blog.map((p) => (
+        <Post {...p} key={p.id} onChange={set} />
+      ))}
+    </div>
   );
 }
 
