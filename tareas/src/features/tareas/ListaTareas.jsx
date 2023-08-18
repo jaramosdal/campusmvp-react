@@ -1,59 +1,51 @@
 import { useState, useContext } from "react";
-import {
-  eliminada,
-  alternada,
-  creada,
-  modificada,
-  todasCompletadas,
-  tareaDuplicada,
-} from "./tareasSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Boton from "../utils/Boton";
 import { ContextoTema } from "../utils/temas";
 import "./ListaTareas.css";
-import { tableroEliminado, tableroRenombrado } from "../tablero/tableroSlice";
+import { tareaCreada, tareaEliminada, tareaRenombrada } from "./tareasSlice";
+import {
+  tareaMovidaDerecha,
+  tareaMovidaIzquierda,
+} from "../tablero/tableroSlice";
 
 const Tarea = ({ id }) => {
-  const { titulo, completada } = useSelector((state) => state.tareas.lista[id]);
+  const { titulo: initialTitulo } = useSelector(
+    (state) => state.tareas.tareas[id]
+  );
   const dispatch = useDispatch();
-  const eliminarTarea = () => dispatch(eliminada(id));
-  const alternarTarea = () => dispatch(alternada(id));
+  // ATENCIÓN: al establecer el título con useState, este hook pasa a controlar su
+  // estado y por tanto no se actualiza cuando se carguen tareas del servidor.
+  // Lo ideal sería permitir la edición (y por tanto usar useState) únicamente
+  // cuando el usuario decida editar el título
+  const [titulo, setTitulo] = useState(initialTitulo);
+  const eliminarTarea = () => dispatch(tareaEliminada(id));
   const editarTarea = (event) => {
-    dispatch(modificada({ id, titulo: event.target.value }));
+    setTitulo(event.target.value);
+    dispatch(tareaRenombrada({ id, titulo: event.target.value }));
   };
-  const duplicarTarea = () => dispatch(tareaDuplicada(id));
 
   return (
-    <li className={completada ? "done" : "todo"}>
-      <label>
-        <input
-          type="checkbox"
-          checked={completada}
-          onChange={alternarTarea}
-          readOnly
-        />
-        {completada ? "DONE" : "TODO"}
-      </label>
-      <input
-        type="text"
-        value={titulo}
-        onChange={editarTarea}
-        disabled={completada}
-      />
-      <Boton onClick={duplicarTarea}>D</Boton>
-      <Boton onClick={eliminarTarea}>X</Boton>
-    </li>
+    <>
+      <li>
+        <input type="text" value={titulo} onChange={editarTarea} />
+        <Boton onClick={() => dispatch(tareaMovidaIzquierda(id))}>&lt;</Boton>
+        <Boton onClick={() => dispatch(tareaMovidaDerecha(id))}>&gt;</Boton>
+        <Boton onClick={eliminarTarea}>×</Boton>
+      </li>
+    </>
   );
 };
 
-const FormularioNueva = () => {
+const FormularioNueva = ({ listaId }) => {
   const [nuevaTitulo, setNuevaTitulo] = useState("");
   const dispatch = useDispatch();
 
   const manejarSubmit = (event) => {
     event.preventDefault();
-    dispatch(creada(nuevaTitulo));
-    setNuevaTitulo("");
+    dispatch(tareaCreada({ titulo: nuevaTitulo, lista: listaId })).then(() =>
+      setNuevaTitulo("")
+    );
   };
 
   return (
@@ -71,16 +63,10 @@ const FormularioNueva = () => {
 
 const ListaTareas = ({ id: listaId }) => {
   const { nombre, lista: tareas } = useSelector(
-    (state) => state.tablero[listaId]
+    (state) => state.tablero.listas[listaId] ?? { nombre: "", lista: [] }
   );
-  const dispatch = useDispatch();
+  const status = useSelector((state) => state.tareas.status);
   const tema = useContext(ContextoTema);
-  const handleNameChange = (event) => {
-    dispatch(tableroRenombrado({ listaId, nombre: event.target.value }));
-  };
-  const handleElminar = () => {
-    dispatch(tableroEliminado(listaId));
-  };
 
   return (
     <div
@@ -88,13 +74,9 @@ const ListaTareas = ({ id: listaId }) => {
       style={{ background: tema.fondo, color: tema.texto }}
     >
       <h2>{nombre}</h2>
-      <h2>
-        <input type="text" value={nombre} onChange={handleNameChange} />
-        <Boton type="submit" onClick={handleElminar}>
-          X
-        </Boton>
-      </h2>
-      {tareas.length > 0 && (
+      {status == "LOADING" && <p>Cargando tareas...</p>}
+      {status == "FAILED" && <p>Ocurrió un error</p>}
+      {status == "SUCCESS" && (
         <ul>
           {tareas.map((id) => (
             <Tarea key={id} id={id} />

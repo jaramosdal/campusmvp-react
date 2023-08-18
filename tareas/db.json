@@ -1,0 +1,58 @@
+{
+  "tareas": [
+    {
+      "id": 1,
+      "titulo": "Extraer estilo de lista en componente",
+      "lista": "todo"
+    },
+    {
+      "id": 2,
+      "titulo": "Comunicar app con backend simulado",
+      "lista": "todo"
+    },
+    {
+      "id": 3,
+      "titulo": "Desplegar aplicación",
+      "lista": "todo"
+    },
+    {
+      "id": 4,
+      "titulo": "Gestión de estado con Redux",
+      "lista": "doing"
+    },
+    {
+      "id": 5,
+      "titulo": "Slice tablero con varias listas de tareas",
+      "lista": "doing"
+    },
+    {
+      "id": 6,
+      "titulo": "Componentes para mostrar tareas",
+      "lista": "done"
+    },
+    {
+      "id": 7,
+      "titulo": "Acciones para añadir y eliminar tareas",
+      "lista": "done"
+    },
+    {
+      "id": 8,
+      "titulo": "Componente Botón independiente",
+      "lista": "done"
+    }
+  ],
+  "tablero": [
+    {
+      "id": "todo",
+      "nombre": "Pendiente"
+    },
+    {
+      "id": "doing",
+      "nombre": "En proceso"
+    },
+    {
+      "id": "done",
+      "nombre": "Completado"
+    }
+  ]
+}

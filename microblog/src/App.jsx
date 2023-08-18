@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getBlog } from "./services";
+import { getBlog, saveNewPost } from "./services";
 import { useFlag } from "./useFlag";
+import Post from "./Post";
 
 function App() {
   const [blog, setBlog] = useState([]);
@@ -14,13 +15,13 @@ function App() {
   const addPost = (event) => {
     event.preventDefault();
     saveNewPost(postContent).then(set);
-    setNewPost("");
+    setPostContent("");
   };
 
   return (
     <div className="App">
       <h1>Microblog personal</h1>
-      <form onSubmit={handleSubmit} className="new">
+      <form onSubmit={addPost} className="new">
         <textarea
           value={postContent}
           placeholder="Nuevo post"

@@ -1,93 +1,135 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { creada, eliminada } from "../tareas/tareasSlice";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import cliente from "../api/api";
+import {
+  tareaCreada,
+  tareaMovida,
+  tareasCargadas,
+  tareaEliminada,
+} from "../tareas/tareasSlice";
 
 const initialState = {
-  todo: {
-    nombre: "Pendiente",
-    lista: [2, 3],
-  },
-  doing: {
-    nombre: "En proceso",
-    lista: [1],
-  },
-  done: {
-    nombre: "Completado",
-    lista: [],
-  },
+  status: "LOADING",
+  listas: {},
 };
+
+export const cargarTablero = createAsyncThunk(
+  "tablero/cargarTablero",
+  async () => await cliente.tablero.get()
+);
+export const listaCreada = createAsyncThunk(
+  "tablero/listaCreada",
+  async (nombre) => await cliente.tablero.post({ nombre })
+);
 
 const tableroSlice = createSlice({
   name: "tablero",
   initialState,
   reducers: {
-    listaCreada: {
-      reducer(state, action) {
-        state[action.payload.id] = {
-          nombre: action.payload.nombre,
-          lista: [],
-        };
-      },
-      prepare(nombre) {
-        return { payload: { id: nanoid(), nombre } };
-      },
-    },
-    listaEliminada(state, action) {
-      delete state[action.payload];
-    },
     tareaQuitada(state, action) {
-      state[action.payload.from_id].lista.splice(
-        state[action.payload.from_id].lista.indexOf(action.payload.tarea_id),
+      state.listas[action.payload.from_id].lista.splice(
+        state.listas[action.payload.from_id].lista.indexOf(
+          action.payload.tarea_id
+        ),
         1
       );
     },
     tareaAgregada(state, action) {
       const orden =
-        action.payload.orden ?? state[action.payload.to_id].lista.length;
-      state[action.payload.to_id].lista.splice(
+        action.payload.orden ?? state.listas[action.payload.to_id].lista.length;
+      state.listas[action.payload.to_id].lista.splice(
         orden,
         0,
         action.payload.tarea_id
       );
     },
-    tableroRenombrado(state, action) {
-      console.log(action);
-      state[action.payload.listaId].nombre = action.payload.nombre;
-    },
   },
   extraReducers: (builder) => {
-    builder.addCase(creada, (state, action) => {
-      state[action.payload.listaId].lista.push(action.payload.id);
-    });
-    builder.addCase(eliminada, (state, action) => {
-      console.log("eliminada", action);
-      for (let t in state) {
-        const index = state[t].lista.indexOf(action.payload);
-        if (index > -1) {
-          state[t].lista.splice(index, 1);
+    builder
+      .addCase(tareaCreada.fulfilled, (state, action) => {
+        state.listas[action.payload.lista].lista.push(action.payload.id);
+      })
+      .addCase(tareaEliminada.fulfilled, (state, action) => {
+        for (let t in state.listas) {
+          const index = state.listas[t].lista.indexOf(action.meta.arg);
+          if (index > -1) {
+            state.listas[t].lista.splice(index, 1);
+          }
         }
-      }
-    });
+      })
+      .addCase(cargarTablero.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(cargarTablero.fulfilled, (state, action) => {
+        for (let lista of action.payload) {
+          state.listas[lista.id] = lista;
+        }
+        state.status = "SUCCESS";
+      })
+      .addCase(cargarTablero.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      .addCase(tareasCargadas.fulfilled, (state, action) => {
+        for (let l in state.listas) {
+          state.listas[l].lista = [];
+        }
+        for (let tarea of action.payload) {
+          state.listas[tarea.lista].lista.push(tarea.id);
+        }
+      })
+      .addCase(listaCreada.fulfilled, (state, action) => {
+        state.listas[action.payload.id] = {
+          nombre: action.payload.nombre,
+          lista: [],
+        };
+      });
   },
 });
 
-export const {
-  listaCreada,
-  tareaQuitada,
-  tareaAgregada,
-  tableroRenombrado,
-  listaEliminada,
-} = tableroSlice.actions;
+const { tareaQuitada, tareaAgregada } = tableroSlice.actions;
 
-export const tableroEliminado = (listaId) => (dispatch, getState) => {
-  const tablero = getState().tablero[listaId];
-  console.log(tablero.lista);
-
-  for (const tareaId of tablero.lista) {
-    console.log("Elimino tarea " + tareaId);
-    dispatch(eliminada(tareaId));
+// Escribimos la lógica de mover una tarea en forma de "thunk",
+// que lanza a su vez las acciones de quitar la tarea de un
+// tablero y agregarla a otro.
+// La función `tareaMovidaDerecha` es un "thunk action creator", que una vez
+// que se llama con parámetros devuelve un "thunk". Los "thunks" se
+// pueden despachar igual que las acciones, con dispatch().
+export const tareaMovidaDerecha = (tarea_id) => (dispatch, getState) => {
+  // Consultar el tablero actual
+  const tablero = getState().tablero.listas;
+  // Encontrar la lista a la que pertenece la tarea
+  const from_index = Object.values(tablero).findIndex((v) =>
+    v.lista.includes(tarea_id)
+  );
+  // Calcular la siguiente lista
+  const to_index = from_index + 1;
+  // Solo movemos si existe una lista más a la derecha
+  if (to_index < Object.keys(tablero).length) {
+    const [from_id, to_id] = Object.keys(tablero).slice(
+      from_index,
+      to_index + 1
+    );
+    dispatch(tareaMovida({ id: tarea_id, lista: to_id })).then(() => {
+      dispatch(tareaQuitada({ tarea_id, from_id }));
+      dispatch(tareaAgregada({ tarea_id, to_id }));
+    });
   }
-
-  dispatch(listaEliminada(listaId));
+};
+export const tareaMovidaIzquierda = (tarea_id) => (dispatch, getState) => {
+  const tablero = getState().tablero.listas;
+  const from_index = Object.values(tablero).findIndex((v) =>
+    v.lista.includes(tarea_id)
+  );
+  const to_index = from_index - 1;
+  if (to_index >= 0) {
+    const [to_id, from_id] = Object.keys(tablero).slice(
+      to_index,
+      from_index + 1
+    );
+    dispatch(tareaMovida({ id: tarea_id, lista: to_id })).then(() => {
+      dispatch(tareaQuitada({ tarea_id, from_id }));
+      dispatch(tareaAgregada({ tarea_id, to_id }));
+    });
+  }
 };
 
 export default tableroSlice.reducer;

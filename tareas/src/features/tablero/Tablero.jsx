@@ -1,21 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listaCreada } from "./tableroSlice";
 import ListaTareas from "../tareas/ListaTareas";
 import Boton from "../utils/Boton";
+import { cargarTablero, listaCreada } from "./tableroSlice";
+import { tareasCargadas } from "../tareas/tareasSlice";
 
 const Tablero = () => {
-  const listas = useSelector((state) => Object.keys(state.tablero));
-  const [nuevaLista, setNuevaLista] = useState("");
+  const { status, listas } = useSelector((state) => state.tablero);
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(cargarTablero()).then(() => dispatch(tareasCargadas()));
+  }, [dispatch]);
+
+  const [nuevaLista, setNuevaLista] = useState("");
   const crearLista = (event) => {
     event.preventDefault();
-    dispatch(listaCreadaa(nuevaLista));
+    dispatch(listaCreada(nuevaLista));
     setNuevaLista("");
   };
+
+  if (status == "LOADING") return <p>Cargando tablero...</p>;
+  if (status == "FAILED") return <p>Error al cargar el tablero.</p>;
+
   return (
     <div className="tablero">
-      {listas.map((id) => (
+      {Object.keys(listas).map((id) => (
         <ListaTareas key={id} id={id} />
       ))}
       <div className="lista">

@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { deletePost, editPost, getAuthor } from "./services";
+
 function Post({ id, autoria, contenido, fecha, onChange }) {
   const [nombre, setNombre] = useState("Anónimo");
   const [postContent, setPostContent] = useState(contenido);
@@ -34,3 +37,5 @@ function Post({ id, autoria, contenido, fecha, onChange }) {
     </div>
   );
 }
+
+export default Post;

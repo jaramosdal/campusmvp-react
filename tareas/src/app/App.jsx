@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Tablero from "../features/tablero/Tablero";
 
 const Cabecera = () => {
-  const tareas = useSelector((state) => Object.values(state.tareas.lista));
+  const tareas = useSelector((state) => Object.values(state.tareas.tareas));
   if (tareas.length == 0) {
     return <p>¡Enhorabuena! No quedan tareas.</p>;
   }
