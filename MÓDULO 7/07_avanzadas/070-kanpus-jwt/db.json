@@ -1,0 +1,200 @@
+{
+  "tareas": [
+    {
+      "id": 1,
+      "titulo": "Extraer estilo de lista en componente",
+      "lista": "doing"
+    },
+    {
+      "id": 2,
+      "titulo": "Comunicar app con backend simulado",
+      "lista": "done"
+    },
+    {
+      "id": 3,
+      "titulo": "Desplegar aplicación",
+      "lista": "todo"
+    },
+    {
+      "id": 5,
+      "titulo": "Slice tablero con varias listas de tareas",
+      "lista": "todo"
+    },
+    {
+      "id": 6,
+      "titulo": "Componentes para mostrar tareas",
+      "lista": "doing"
+    },
+    {
+      "id": 7,
+      "titulo": "Acciones para añadir y eliminar tareas",
+      "lista": "doing"
+    },
+    {
+      "id": 8,
+      "titulo": "Componente Botón independiente",
+      "lista": "doing"
+    },
+    {
+      "titulo": "amazing",
+      "lista": "D8mw0Bs",
+      "id": 9
+    },
+    {
+      "titulo": "no problem",
+      "lista": "i33dOAR",
+      "id": 10
+    },
+    {
+      "titulo": "sdfsfwasfe",
+      "lista": "uVK3uSG",
+      "id": 11
+    },
+    {
+      "titulo": "rc34543",
+      "lista": "uVK3uSG",
+      "id": 12
+    },
+    {
+      "titulo": "43vtv4ct3",
+      "lista": "uVK3uSG",
+      "id": 13
+    },
+    {
+      "titulo": "c5tv345tyvb4y",
+      "lista": "uVK3uSG",
+      "id": 14
+    },
+    {
+      "titulo": "b3b54v3",
+      "lista": "uVK3uSG",
+      "id": 15
+    },
+    {
+      "titulo": "cr234",
+      "lista": "uVK3uSG",
+      "id": 16
+    },
+    {
+      "titulo": "242",
+      "lista": "uVK3uSG",
+      "id": 17
+    },
+    {
+      "titulo": "4523v56v45tyer",
+      "lista": "uVK3uSG",
+      "id": 18
+    },
+    {
+      "titulo": "gvwete",
+      "lista": "uVK3uSG",
+      "id": 19
+    },
+    {
+      "titulo": "wertrw6t453",
+      "lista": "uVK3uSG",
+      "id": 20
+    },
+    {
+      "titulo": "rgh45yh23",
+      "lista": "HhnWGUf",
+      "id": 21
+    }
+  ],
+  "listas": [
+    {
+      "id": "todo",
+      "nombre": "Pendiente",
+      "orden": 1,
+      "tablero": "a"
+    },
+    {
+      "id": "doing",
+      "nombre": "En proceso",
+      "orden": 2,
+      "tablero": "a"
+    },
+    {
+      "id": "done",
+      "nombre": "Completado",
+      "orden": 3,
+      "tablero": "a"
+    },
+    {
+      "nombre": "a",
+      "id": "8Ra6dac"
+    },
+    {
+      "nombre": "yes",
+      "tablero": "b",
+      "orden": 1,
+      "id": "D8mw0Bs"
+    },
+    {
+      "nombre": "hala",
+      "tablero": "b",
+      "orden": 2,
+      "id": "i33dOAR"
+    },
+    {
+      "nombre": "elfnmdalwkjrbfga.",
+      "tablero": "l50FmXA",
+      "orden": 1,
+      "id": "uVK3uSG"
+    },
+    {
+      "nombre": "hr32io9rg29",
+      "tablero": "l50FmXA",
+      "orden": 2,
+      "id": "oQEH-J9"
+    },
+    {
+      "nombre": "bcsjkhdvfc",
+      "tablero": "l50FmXA",
+      "orden": 3,
+      "id": "8dQTMWt"
+    },
+    {
+      "nombre": "83y29rb",
+      "tablero": "l50FmXA",
+      "orden": 4,
+      "id": "33ntQdD"
+    },
+    {
+      "nombre": "grg4w5gh3",
+      "tablero": "d05hlQy",
+      "orden": 1,
+      "id": "HhnWGUf"
+    }
+  ],
+  "tableros": [
+    {
+      "id": "a",
+      "nombre": "Proyecto Kanpus en React/Redux",
+      "cuenta": "alice"
+    },
+    {
+      "id": "b",
+      "nombre": "Tareas de curso de Deep Learning",
+      "cuenta": "alice"
+    }
+  ],
+  "cuentas": [
+    {
+      "id": "alice",
+      "email": "alice@example.org",
+      "pass": "fauxpass",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NDc2NDY5LTQ3NDczOTEiLCJuYW1lIjoiQWxpY2UiLCJpYXQiOjE3MTY5MzkwMjJ9.0l41RnBend6gaaBq6AR9hHQr7rZN9kwHDa-Ys8AJoCA"
+    },
+    {
+      "id": "alice2",
+      "pass": "efugwo37",
+      "email": "fwu@fgbe.ciedwg"
+    },
+    {
+      "id": "david",
+      "pass": "J59B7ceh52T5BTC",
+      "email": "david@deivi.ch"
+    }
+  ]
+}
