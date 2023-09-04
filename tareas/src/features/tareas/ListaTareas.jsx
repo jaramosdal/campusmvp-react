@@ -5,6 +5,7 @@ import { ContextoTema } from "../utils/temas";
 import "./ListaTareas.css";
 import { tareaCreada, tareaEliminada, tareaRenombrada } from "./tareasSlice";
 import {
+  // listaDuplicada,
   tareaMovidaDerecha,
   tareaMovidaIzquierda,
 } from "../tablero/tableroSlice";
@@ -68,6 +69,12 @@ const ListaTareas = ({ id: listaId }) => {
   const status = useSelector((state) => state.tareas.status);
   const tema = useContext(ContextoTema);
 
+  // const dispatch = useDispatch();
+
+  // const handleDuplicarLista = () => {
+  //   dispatch(listaDuplicada(listaId));
+  // };
+
   return (
     <div
       className="lista"
@@ -84,6 +91,12 @@ const ListaTareas = ({ id: listaId }) => {
         </ul>
       )}
       <FormularioNueva listaId={listaId} />
+
+      {/* <p>
+        <Boton type="submit" onClick={handleDuplicarLista}>
+          Duplicar lista
+        </Boton>
+      </p> */}
     </div>
   );
 };

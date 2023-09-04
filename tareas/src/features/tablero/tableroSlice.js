@@ -21,6 +21,19 @@ export const listaCreada = createAsyncThunk(
   async (nombre) => await cliente.tablero.post({ nombre })
 );
 
+// export const listaDuplicada = createAsyncThunk(
+//   "tablero/listaDuplicada",
+//   async (listaId, { dispatch, getState }) => {
+//     const { tareas, tablero } = getState();
+//     const lista = tablero.listas[listaId];
+//     const newTareaId = Math.max(...Object.keys(tareas.tareas)) + 1;
+//     const tareasLista = tareas.tareas.filter(tarea => lista.lista.include(tarea))
+//     console.log(tareas);
+//     console.log(lista);
+//     console.log(newTareaId);
+//   }
+// );
+
 const tableroSlice = createSlice({
   name: "tablero",
   initialState,
