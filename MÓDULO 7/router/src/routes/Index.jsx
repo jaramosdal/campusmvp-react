@@ -22,7 +22,7 @@ export default function Index() {
       >
         {images.map((id) => (
           <Link key={id} to={`photos/${id}`}>
-            <img src="{`/images/${id}.jpg`}/" />
+            <img src={`/images/${id}.jpg`} />
           </Link>
         ))}
       </div>

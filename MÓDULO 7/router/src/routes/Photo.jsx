@@ -16,6 +16,10 @@ export default function Photo() {
     navigation.state === "loading" &&
     !navigation.location.pathname.includes(id);
 
+  console.log(
+    navigation.state === "loading" && !navigation.location.pathname.includes(id)
+  );
+
   const showVotes = navigation.formData ? votes + 1 : votes;
 
   return (
