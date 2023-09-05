@@ -1,9 +1,15 @@
 import { useRef } from "react";
-import { Form } from "react-router-dom";
+import { Form, redirect, useNavigation } from "react-router-dom";
+import { sendVote } from "../gallery";
 
-// routes/vote.jsx
+export async function action({ params }) {
+  await sendVote(params.imageId);
+  return redirect(`/photos/${params.imageId}/voted`);
+}
+
 export default function Vote() {
   const boton = useRef();
+  const navigation = useNavigation();
 
   return (
     <div className="cta">
@@ -12,7 +18,11 @@ export default function Vote() {
         method="post"
         onSubmit={() => (boton.current.disabled = "disabled")}
       >
-        <button ref={boton} type="submit">
+        <button
+          ref={boton}
+          type="submit"
+          className={navigation.state !== "idle" ? "sending" : ""}
+        >
           Votar
         </button>
       </Form>
